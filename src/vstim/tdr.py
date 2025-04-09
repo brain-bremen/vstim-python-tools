@@ -620,12 +620,13 @@ def read_tdr(filename: pathlib.Path) -> TdrFile:
         if headerId in SubHeaderIdMap.keys():
             continue
 
-        if header_enum not in HeaderIdMap.keys():
+        if header_enum == HeaderId.UNKNOWN:
             warnings.warn(f"Unknown header {headerId}", category=UserWarning)
             continue
 
-        header = HeaderIdMap[header_enum].from_lines(lines[iLine : iLine + nLines])
-        headers.append(header)
+        if header_enum in HeaderIdMap.keys():
+            header = HeaderIdMap[header_enum].from_lines(lines[iLine : iLine + nLines])
+            headers.append(header)
 
     return TdrFile(
         headers=headers,
